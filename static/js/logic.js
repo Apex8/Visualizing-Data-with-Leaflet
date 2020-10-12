@@ -1,64 +1,76 @@
 var quakes = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"
-console.log (quakes)
-var plates = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json"
-console.log (plates)
 
-function markerSize(magnitude) {
-    return magnitude * 5;
-};
+d3.json(queryUrl, function(data) {
+    createFeatures(data.features);
+    console.log(data.features)
+  });
 
-var earthquakes = new L.LayerGroup();
+  function createFeatures(quakeData) {
+    function onEachFeature(feature, layer) {
+        layer.bindPopup("<h3>" + feature.properties.place +
+          "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
+      }
 
-d3.json(quakes, function (geoJson) {
-    L.geoJSON(geoJson.features, {
-        pointToLayer: function (geoJsonPoint, latlng) {
-            return L.circleMarker(latlng, { radius: markerSize(geoJsonPoint.properties.mag) });
-        },
+      function radiusSize(magnitude) {
+        return magnitude * 1000;
+      }
 
-        style: function (geoJsonFeature) {
-            return {
-                fillColor: Color(geoJsonFeature.properties.mag),
-                fillOpacity: 0.6,
-                weight: 0.2,
-                color: 'black'
-                
-            }
-        },
-
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(
-                "<h4 style='text-align:center;'>" + new Date(feature.properties.time) +
-                "</h4> <hr> <h5 style='text-align:center;'>" + feature.properties.title + "</h5>");
+      function circleColor(magnitude) {
+        if (magnitude < 1) {
+          return "darkgreen"
         }
-    }).addTo(earthquakes);
-    createMap(earthquakes);
-});
+        else if (magnitude < 2) {
+          return "yellow"
+        }
+        else if (magnitude < 3) {
+          return "darkyellow"
+        }
+        else if (magnitude < 4) {
+          return "orange"
+        }
+        else if (magnitude < 5) {
+          return "red"
+        }
+        else {
+          return "green"
+        }
+      }
 
-var tectonicplates = new L.LayerGroup();
-
-d3.json(plates, function (geoJson) {
-    L.geoJSON(geoJson.features, {
-        style: function (geoJsonFeature) {
-            return {
-                weight: 3,
-                color: 'blue'
-            }
+      var earthquakes = L.geoJSON(earthquakeData, {
+        pointToLayer: function(earthquakeData, latlng) {
+          return L.circle(latlng, {
+            radius: radiusSize(earthquakeData.properties.mag),
+            color: circleColor(earthquakeData.properties.mag),
+            fillOpacity: 1
+          });
         },
-    }).addTo(tectonicplates);
-})
+        onEachFeature: onEachFeature
+      });
 
-function Color(magnitude) {
-    if (magnitude > 5) {
-        return 'darkorange'
-    } else if (magnitude > 4) {
-        return 'orange'
-    } else if (magnitude > 3) {
-        return 'darkyellow'
-    } else if (magnitude > 2) {
-        return 'yellow'
-    } else if (magnitude > 1) {
-        return 'darkgreen'
-    } else {
-        return 'lightgreen'
+      createMap(earthquakes);
     }
-};
+    
+    function createMap(earthquakes) {
+    
+      var outdoorsmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+        attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+        maxZoom: 18,
+        id: "mapbox.outdoors",
+        accessToken: API_KEY
+      });
+    
+      var satellitemap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+        attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+        maxZoom: 18,
+        id: "mapbox.satellite",
+        accessToken: API_KEY
+      });
+    
+      var grayscalemap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+        attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+        maxZoom: 18,
+        id: "mapbox.light",
+        accessToken: API_KEY
+      });
+
+      var faultLine = new L.LayerGroup();
