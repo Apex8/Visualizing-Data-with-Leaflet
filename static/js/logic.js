@@ -52,20 +52,27 @@ d3.json(quakes, function(data) {
     
     function createMap(earthquakes) {
     
+    var outdoorsmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+        attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+        maxZoom: 18,
+        id: "mapbox.outdoors",
+        accessToken: API_KEY
+        });
     
-      var satellitemap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+    
+    var satellitemap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
         attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
         maxZoom: 18,
         id: "mapbox.satellite",
         accessToken: API_KEY
-      });
+        });
     
       var grayscalemap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
         attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
         maxZoom: 18,
         id: "mapbox.light",
         accessToken: API_KEY
-      });
+        });
 
       var faultLine = new L.LayerGroup();
 
@@ -102,12 +109,12 @@ d3.json(quakes, function(data) {
     })
 
     function getColor(d) {
-        return d > 5 ? '#ff3333' :
-               d > 4  ? '#ff6633' :
-               d > 3  ? '#ff9933' :
-               d > 2  ? '#ffcc33' :
-               d > 1  ? '#ffff33' :
-                        '#ccff33';
+        return d > 5 ? 'red' :
+               d > 4  ? 'orange' :
+               d > 3  ? 'darkyellow' :
+               d > 2  ? 'yellow' :
+               d > 1  ? 'darkgreen' :
+                        'green';
     }
 
     var legend = L.control({position: 'topright'});
