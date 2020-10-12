@@ -9,7 +9,7 @@ function markerSize(magnitude) {
 
 var earthquakes = new L.LayerGroup();
 
-d3.json(API_quakes, function (geoJson) {
+d3.json(quakes, function (geoJson) {
     L.geoJSON(geoJson.features, {
         pointToLayer: function (geoJsonPoint, latlng) {
             return L.circleMarker(latlng, { radius: markerSize(geoJsonPoint.properties.mag) });
@@ -33,3 +33,32 @@ d3.json(API_quakes, function (geoJson) {
     }).addTo(earthquakes);
     createMap(earthquakes);
 });
+
+var tectonicplates = new L.LayerGroup();
+
+d3.json(plates, function (geoJson) {
+    L.geoJSON(geoJson.features, {
+        style: function (geoJsonFeature) {
+            return {
+                weight: 3,
+                color: 'blue'
+            }
+        },
+    }).addTo(tectonicplates);
+})
+
+function Color(magnitude) {
+    if (magnitude > 5) {
+        return 'darkorange'
+    } else if (magnitude > 4) {
+        return 'orange'
+    } else if (magnitude > 3) {
+        return 'darkyellow'
+    } else if (magnitude > 2) {
+        return 'yellow'
+    } else if (magnitude > 1) {
+        return 'darkgreen'
+    } else {
+        return 'lightgreen'
+    }
+};
