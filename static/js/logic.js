@@ -52,12 +52,16 @@ d3.json(quakes, function(data) {
     
     function createMap(earthquakes) {
     
-        var outdoorsmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
-            attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+        
+        
+        var outdoorsmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+            attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+            tileSize: 512,
             maxZoom: 18,
-            id: "mapbox.outdoors",
+            zoomOffset: -1,
+            id: "mapbox/streets-v11",
             accessToken: API_KEY
-            });
+          });
     
     
         var satellitemap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
@@ -86,7 +90,7 @@ d3.json(quakes, function(data) {
         FaultLines: faultLine
       };
 
-      var myMap = L.map("map", {
+      var myMap = L.map("map-id", {
         center: [
             35.23, -80.85
         ],
@@ -103,7 +107,7 @@ d3.json(quakes, function(data) {
     d3.json(faultlinequery, function(data) {
         L.geoJSON(data, {
           style: function() {
-            return {color: "blue", fillOpacity: 0.5}
+            return {color: "blue", fillOpacity: 0.2}
           }
         }).addTo(faultLine)
     })
@@ -111,7 +115,7 @@ d3.json(quakes, function(data) {
     function getColor(d) {
         return d >= 5 ? 'red' :
                d >= 4  ? 'orange' :
-               d >= 3  ? 'darkyellow' :
+               d >= 3  ? '#cece06' :
                d >= 2  ? 'yellow' :
                d >= 1  ? 'darkgreen' :
                         'green';
