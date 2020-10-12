@@ -78,3 +78,36 @@ d3.json(queryUrl, function(data) {
         Earthquakes: earthquakes,
         FaultLines: faultLine
       };
+
+      var myMap = L.map("map", {
+        center: [
+            35.23, -80.85
+        ],
+        zoom: 4,
+        layers: [outdoorsmap, earthquakes, faultLine]
+      });
+      
+     L.control.layers(baseMaps, overlayMaps, {
+        collapsed: false
+    }).addTo(myMap);
+
+    var faultlinequery = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_plates.json";
+
+    d3.json(faultlinequery, function(data) {
+        L.geoJSON(data, {
+          style: function() {
+            return {color: "blue", fillOpacity: 0.5}
+          }
+        }).addTo(faultLine)
+    })
+
+    function getColor(d) {
+        return d > 5 ? '#ff3333' :
+               d > 4  ? '#ff6633' :
+               d > 3  ? '#ff9933' :
+               d > 2  ? '#ffcc33' :
+               d > 1  ? '#ffff33' :
+                        '#ccff33';
+    }
+
+    var legend = L.control({position: 'topright'});
