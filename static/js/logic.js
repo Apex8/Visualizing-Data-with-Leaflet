@@ -12,7 +12,7 @@ d3.json(quakes, function(data) {
       }
 
       function radiusSize(magnitude) {
-        return magnitude * 1000;
+        return magnitude * 3000;
       }
 
       function circleColor(magnitude) {
