@@ -109,11 +109,11 @@ d3.json(quakes, function(data) {
     })
 
     function getColor(d) {
-        return d > 5 ? 'red' :
-               d > 4  ? 'orange' :
-               d > 3  ? 'darkyellow' :
-               d > 2  ? 'yellow' :
-               d > 1  ? 'darkgreen' :
+        return d >= 5 ? 'red' :
+               d >= 4  ? 'orange' :
+               d >= 3  ? 'darkyellow' :
+               d >= 2  ? 'yellow' :
+               d >= 1  ? 'darkgreen' :
                         'green';
     }
 
