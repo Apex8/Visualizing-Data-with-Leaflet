@@ -1,6 +1,6 @@
 var quakes = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"
 
-d3.json(queryUrl, function(data) {
+d3.json(quakes, function(data) {
     createFeatures(data.features);
     console.log(data.features)
   });
@@ -111,3 +111,21 @@ d3.json(queryUrl, function(data) {
     }
 
     var legend = L.control({position: 'topright'});
+
+    legend.onAdd = function (map) {
+  
+        var div = L.DomUtil.create('div', 'info legend'),
+            mags = [0, 1, 2, 3, 4, 5],
+            labels = [];
+
+            for (var i = 0; i < mags.length; i++) {
+                div.innerHTML +=
+                    '<i style="background:' + getColor(mags[i] + 1) + '"></i> ' +
+                    mags[i] + (mags[i + 1] ? '&ndash;' + mags[i + 1] + '<br>' : '+');
+            }
+        
+            return div;
+        };
+        
+        legend.addTo(myMap);
+      }
