@@ -14,3 +14,22 @@ d3.json(API_quakes, function (geoJson) {
         pointToLayer: function (geoJsonPoint, latlng) {
             return L.circleMarker(latlng, { radius: markerSize(geoJsonPoint.properties.mag) });
         },
+
+        style: function (geoJsonFeature) {
+            return {
+                fillColor: Color(geoJsonFeature.properties.mag),
+                fillOpacity: 0.6,
+                weight: 0.2,
+                color: 'black'
+                
+            }
+        },
+
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup(
+                "<h4 style='text-align:center;'>" + new Date(feature.properties.time) +
+                "</h4> <hr> <h5 style='text-align:center;'>" + feature.properties.title + "</h5>");
+        }
+    }).addTo(earthquakes);
+    createMap(earthquakes);
+});
