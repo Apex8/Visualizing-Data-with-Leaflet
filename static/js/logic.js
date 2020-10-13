@@ -1,4 +1,5 @@
 var quakes = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"
+var faultlinequery = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_plates.json";
 
 d3.json(quakes, function(data) {
     createFeatures(data.features);
@@ -101,7 +102,6 @@ d3.json(quakes, function(data) {
         collapsed: false
     }).addTo(myMap);
 
-    var faultlinequery = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_plates.json";
 
     d3.json(faultlinequery, function(data) {
         L.geoJSON(data, {
