@@ -8,7 +8,7 @@ d3.json(quakes, function(data) {
   function createFeatures(quakeData) {
     function onEachFeature(feature, layer) {
         layer.bindPopup("<h3>" + feature.properties.place +
-          "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
+        "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
       }
 
       function radiusSize(magnitude) {
